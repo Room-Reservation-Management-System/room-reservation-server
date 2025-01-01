@@ -7,6 +7,7 @@ import com.RoomReservationSystem.RoomReservationServer.dto.UserDto;
 import com.RoomReservationSystem.RoomReservationServer.entity.User;
 import com.RoomReservationSystem.RoomReservationServer.repository.UserRepository;
 import com.RoomReservationSystem.RoomReservationServer.services.auth.AuthService;
+import com.RoomReservationSystem.RoomReservationServer.services.jwt.UserService;
 import com.RoomReservationSystem.RoomReservationServer.util.JwtUtil;
 import jakarta.persistence.EntityExistsException;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +32,7 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final UserRepository userRepository;
     private final JwtUtil jwtUtil;
+    private final UserService userService;
     @PostMapping("/signup")
     public ResponseEntity<?> signupUser(@RequestBody SignupRequest signupRequest) {
         try {
@@ -51,7 +53,7 @@ public class AuthController {
             throw new BadCredentialsException("Incorrect username or password.");
         }
 
-        final UserDetails userDetails = null;
+        final UserDetails userDetails = userService.userDetailsService().loadUserByUsername(authenticationRequest.getEmail());
         Optional<User> optionalUser = userRepository.findFirstByEmail(userDetails.getUsername());
         final String jwt = jwtUtil.generateToken(userDetails);
 
