@@ -4,4 +4,5 @@ import com.RoomReservationSystem.RoomReservationServer.dto.ReservationResponseDt
 
 public interface ReservationService {
     ReservationResponseDto getAllReservations(int pageNumber);
+    boolean changeReservationStatus(Long id, String status);
 }
